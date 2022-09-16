@@ -1,0 +1,10 @@
+# Default ignored files
+.idea
+venv
+.venv
+.vs
+data
+utilities
+models/*
+testvenv
+**/__pycache__
