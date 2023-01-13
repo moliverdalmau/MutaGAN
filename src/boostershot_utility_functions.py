@@ -228,6 +228,12 @@ def preprocess_data(train_data_file: str, train_data_dup_file: str, test_data_fi
             not_duplicates = X_train['ParentSequence'] != X_train['ChildSequence']
             X_train = X_train.loc[not_duplicates]
             #
+            new_data_directory = os.path.split(test_data_file)[0]
+            train_data_file = os.path.join(new_data_directory,'trainUniqueParentsDiffParentChild.csv')
+            test_data_file = os.path.join(new_data_directory,'testUniqueParentsDiffParentChild.csv')
+            train_data_dup_file = os.path.join(new_data_directory,'trainUniqueParentsSameParentChild.csv')
+            test_data_dup_file = os.path.join(new_data_directory,'testUniqueParentsSameParentChild.csv')
+
             X_test.to_csv(test_data_file, index=False)
             X_train.to_csv(train_data_file, index=False)
             X_test_dup.to_csv(test_data_dup_file, index=False)
