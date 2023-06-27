@@ -55,7 +55,7 @@ def parse_tree(marginalAncestralfilename: str, tipfilename: str, alignmentfilena
     seq.rename(columns = {0:'index', 1:'sequence'}, inplace=True)
 
     # Cleaned sequences by removing illegal characters. 
-    seq.loc[:,'sequence'] = seq.loc[:,'sequence'].apply(lambda x: x[coding_sequence_start:coding_sequence_end])
+    seq.loc[:, 'sequence'] = seq.loc[:, 'sequence'].apply(lambda x: x[int(coding_sequence_start):int(coding_sequence_end)])
 
     # translate nucleotides to amino acids
     seq.loc[:,'sequence'] = seq.loc[:,'sequence'].apply(lambda x: str(Seq(x).translate()[:-1]))
@@ -132,8 +132,7 @@ def main(arguments):
     parser.add_argument("--outputfilename", default= '../data/input_model/test_set_mutagan_2018_2019.csv', help="Start of coding sequence for influenza")
 
     args = parser.parse_args(arguments)
-
-    coding_sequence_start = coding_sequence_start-1 #
+    coding_sequence_start = args.coding_sequence_start-1 
 
     if not os.path.exists(args.nodeLabelfilename):
         raise ValueError(f"The filename {args.nodeLabelfilename} does not exist. Please make sure it exists.")

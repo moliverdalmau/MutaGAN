@@ -415,7 +415,7 @@ def predict_sequence(infenc, infdec, inputs: list, n_steps: int):
 
 def train_paired(full_train: list, full_test: list, unmatching_files: list, model_file_names: list,
                  hidden_space_dim: int = 128, num_words: int = 4500, embedding_dim: int = 250, losses: list = [[], []],
-                 epochs: int = 1, batch_size: int = 256, gen_loops: int = 5,
+                 epochs: int = 1, batch_size: int = 50, gen_loops: int = 5,
                  disc_loops: int = 5, first_pass=False, remove_parent_to_parent_training=False, batch_count=None):
     '''
     Function for training the model
@@ -1899,7 +1899,7 @@ def define_GAN(discriminator, autoencoder, hidden_space_dim: int):
     generated_sequence = autoencoder([parentSequence, state_noise_inputs, cell_noise_inputs, goal_inputs])
     output_class = discriminator([parentSequence, generated_sequence])
     gan = Model([parentSequence, state_noise_inputs, cell_noise_inputs, goal_inputs], [output_class, generated_sequence])
-    gan.compile(loss=[Wasserstein_loss, 'sparse_categorical_crossentropy'], optimizer=Adam(lr=0.001))
+    gan.compile(loss=[Wasserstein_loss, 'sparse_categorical_crossentropy'], optimizer=Adam(learning_rate=0.001))
     return (gan)
 
 

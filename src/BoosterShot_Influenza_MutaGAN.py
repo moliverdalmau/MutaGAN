@@ -29,10 +29,10 @@ if __name__ == "__main__":
     window_size = 3
     hidden_space_dim = 128
     embedding_dim = 250
-    train_data_file = "../data/20190220_IG_influenza_GAN_test_weighted_paths_and_leaves_trainUniqueParentsDiffParentChild.csv"
-    train_data_dup_file = "../data/20190220_IG_influenza_GAN_test_weighted_paths_and_leaves_trainUniqueParentsSameParentChild.csv"
-    test_data_file = "../data/20190220_IG_influenza_GAN_test_weighted_paths_and_leaves_testUniqueParentsDiffParentChild.csv"
-    test_data_dup_file = "../data/20190220_IG_influenza_GAN_test_weighted_paths_and_leaves_testUniqueParentsSameParentChild.csv"
+    train_data_file = "../data/20190220_IG_influenza_GAN_test_weighted_paths_and_leaves_trainUniqueParentsDiffParentChild_1.csv"
+    train_data_dup_file = "../data/20190220_IG_influenza_GAN_test_weighted_paths_and_leaves_trainUniqueParentsSameParentChild_1.csv"
+    test_data_file = "../data/20190220_IG_influenza_GAN_test_weighted_paths_and_leaves_testUniqueParentsDiffParentChild_1.csv"
+    test_data_dup_file = "../data/20190220_IG_influenza_GAN_test_weighted_paths_and_leaves_testUniqueParentsSameParentChild_1.csv"
     validation_file = "../data/test_set_mutagan_2018_2019.csv"
 
     raw_training_data_file = "20190220_IG_influenza_GAN_train_weighted_leaves.csv"
@@ -118,7 +118,7 @@ if __name__ == "__main__":
                                  save_best_only=True, mode='max')
     autoencoder.fit([tokenized_x_train, np.zeros((tokenized_x_train.shape[0], hidden_space_dim * 2)),
                      np.zeros((tokenized_y_train.shape[0], hidden_space_dim * 2)), goal_sequences_full_y.astype('int')],
-                    np.expand_dims(tokenized_x_train, -1), batch_size=30, epochs=170,
+                    np.expand_dims(tokenized_x_train, -1), batch_size=15, epochs=1,
                     validation_data=([tokenized_x_test, np.zeros((tokenized_x_test.shape[0], hidden_space_dim * 2)),
                                       np.zeros((tokenized_y_test.shape[0], hidden_space_dim * 2)),
                                       goal_sequences_full_test_y.astype('int')], np.expand_dims(tokenized_x_test, -1)),
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     autoencoder.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
     autoencoder.fit([tokenized_x_train, np.zeros((tokenized_x_train.shape[0], hidden_space_dim * 2)),
                      np.zeros((tokenized_x_train.shape[0], hidden_space_dim * 2)), goal_sequences_full_y.astype('int')],
-                    np.expand_dims(tokenized_x_train, -1), batch_size=30, epochs=36,
+                    np.expand_dims(tokenized_x_train, -1), batch_size=15, epochs=1,
                     validation_data=([tokenized_x_test, np.zeros((tokenized_x_test.shape[0], hidden_space_dim * 2)),
                                       np.zeros((tokenized_x_test.shape[0], hidden_space_dim * 2)),
                                       goal_sequences_full_test_y.astype('int')], np.expand_dims(tokenized_x_test, -1)),
@@ -148,10 +148,10 @@ if __name__ == "__main__":
     g_losses = []
     losses = [d_losses, g_losses]
     _, _, _ = train_paired(full_train, full_test, unmatching_files, model_file_names,
-                                                  hidden_space_dim, num_words, embedding_dim, losses, epochs=200, batch_size=32,
+                                                  hidden_space_dim, num_words, embedding_dim, losses, epochs=1, batch_size=16,
                                                   gen_loops=5, first_pass=True, remove_parent_to_parent_training=True, batch_count=20)
     d_losses, g_losses, file_names = train_paired(full_train, full_test, unmatching_files, model_file_names,
-                                                  hidden_space_dim, num_words, embedding_dim, losses, epochs = 150, batch_size = 45,
+                                                  hidden_space_dim, num_words, embedding_dim, losses, epochs = 1, batch_size = 22,
                                                   gen_loops = 5, first_pass = False, remove_parent_to_parent_training = True, batch_count = 20)
 
     # EVALUATION
