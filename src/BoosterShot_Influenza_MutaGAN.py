@@ -29,10 +29,10 @@ if __name__ == "__main__":
     window_size = 3
     hidden_space_dim = 128
     embedding_dim = 250
-    train_data_file = "../data/20190220_IG_influenza_GAN_test_weighted_paths_and_leaves_trainUniqueParentsDiffParentChild_1.csv"
-    train_data_dup_file = "../data/20190220_IG_influenza_GAN_test_weighted_paths_and_leaves_trainUniqueParentsSameParentChild_1.csv"
-    test_data_file = "../data/20190220_IG_influenza_GAN_test_weighted_paths_and_leaves_testUniqueParentsDiffParentChild_1.csv"
-    test_data_dup_file = "../data/20190220_IG_influenza_GAN_test_weighted_paths_and_leaves_testUniqueParentsSameParentChild_1.csv"
+    train_data_file = "../data/20190220_IG_influenza_GAN_test_weighted_paths_and_leaves_trainUniqueParentsDiffParentChild.csv"
+    train_data_dup_file = "../data/20190220_IG_influenza_GAN_test_weighted_paths_and_leaves_trainUniqueParentsSameParentChild.csv"
+    test_data_file = "../data/20190220_IG_influenza_GAN_test_weighted_paths_and_leaves_testUniqueParentsDiffParentChild.csv"
+    test_data_dup_file = "../data/20190220_IG_influenza_GAN_test_weighted_paths_and_leaves_testUniqueParentsSameParentChild.csv"
     validation_file = "../data/test_set_mutagan_2018_2019.csv"
 
     raw_training_data_file = "20190220_IG_influenza_GAN_train_weighted_leaves.csv"
