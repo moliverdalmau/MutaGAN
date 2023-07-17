@@ -56,12 +56,17 @@ def parse_tree(marginalAncestralfilename: str, tipfilename: str, alignmentfilena
 
     # Cleaned sequences by removing illegal characters. 
     seq.loc[:, 'sequence'] = seq.loc[:, 'sequence'].apply(lambda x: x[int(coding_sequence_start):int(coding_sequence_end)])
+    ##seq.loc[:, 'sequence'] = seq.loc[:, 'sequence'].apply(lambda x: x[int(coding_sequence_start):int(coding_sequence_end)] if isinstance(x, str) else x)
+
 
     # translate nucleotides to amino acids
     seq.loc[:,'sequence'] = seq.loc[:,'sequence'].apply(lambda x: str(Seq(x).translate()[:-1]))
+    ##seq.loc[:,'sequence'] = seq.loc[:,'sequence'].apply(lambda x: str(Seq(str(x)).translate()[:-1]))
+
 
     # change root index label to the last row
     newidx=str(int(seq['index'].loc[~(seq['index']=='ROOT')].max())+1)
+
     seq.loc[seq['index']=='ROOT',"index"]= newidx
 
     # Translate nucleotide sequences to amino acids for tip sequences

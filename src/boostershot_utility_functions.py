@@ -451,6 +451,7 @@ def train_paired(full_train: list, full_test: list, unmatching_files: list, mode
     unmatching_sequences_child = np.load(unmatching_files[0])
     unmatching_sequences_parent = np.load(unmatching_files[1])
     x_train_data = full_train[0]
+    print(x_train_data.shape)
     y_train_data = full_train[1]
     x_test_data = full_test[0]
     y_test_data = full_test[1]
