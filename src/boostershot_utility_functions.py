@@ -451,10 +451,11 @@ def train_paired(full_train: list, full_test: list, unmatching_files: list, mode
     unmatching_sequences_child = np.load(unmatching_files[0])
     unmatching_sequences_parent = np.load(unmatching_files[1])
     x_train_data = full_train[0]
-    print(x_train_data.shape)
     y_train_data = full_train[1]
+    print("XTRAINDATA:::", x_train_data)
+    print("YTRAINDATA:::", y_train_data)
     x_test_data = full_test[0]
-    y_test_data = full_test[1]
+    y_test_data = full_test[1]    
     goal_sequences_full = full_train[2]
     goal_sequences_full_test = full_test[2]
     train_duplicates = []
@@ -484,6 +485,8 @@ def train_paired(full_train: list, full_test: list, unmatching_files: list, mode
         x_train_data = x_train_data[train_duplicates]
         y_train_data = y_train_data[train_duplicates]
         goal_sequences_full = goal_sequences_full[train_duplicates]
+        print("PAr to par :",y_train_par_to_par)
+        print("UNMATCHING :",unmatching_sequences_child)
         unmatching_sequences_child = np.concatenate([unmatching_sequences_child, y_train_par_to_par])
         unmatching_sequences_parent = np.concatenate([unmatching_sequences_parent, x_train_par_to_par])
     #
@@ -520,6 +523,7 @@ def train_paired(full_train: list, full_test: list, unmatching_files: list, mode
         maxlen = x_train_data.shape[-1]
         #
         for _ in tqdm(range(batch_count)):
+            print("Train Data Shape", x_train_data.shape[0])
             # get a random set of input noise and images
             draw_sequences = np.random.randint(0, x_train_data.shape[0], size=batch_size)
             X_batch = x_train_data[draw_sequences]

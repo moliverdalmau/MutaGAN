@@ -8,6 +8,7 @@ import time
 import datetime
 import pandas as pd
 import numpy as np
+import pickle
 
 from tensorflow.keras.callbacks import ModelCheckpoint
 import tensorflow.keras.backend as K
@@ -35,8 +36,8 @@ if __name__ == "__main__":
     test_data_dup_file = "../data/input_model_1/org_test_with_duplicates.csv"
     validation_file = "../data/input_model_1/org_validation.csv"
 
-    raw_training_data_file = '../data/input_model_1/GPx6_GAN_train_weighted_leaves.csv'
-    raw_testing_data_file = '../data/input_model_1/GPx6_GAN_test_weighted_paths_and_leaves.csv'
+    raw_training_data_file = 'GPx6_GAN_train_weighted_leaves.csv'
+    raw_testing_data_file = 'GPx6_GAN_test_weighted_paths_and_leaves.csv'
     unmatching_data_file = '../utilities/gpx_unmatchingsequencesdiff.npy'
     unmatching_child_file = "../utilities/gpx_unmatchingsequenceschild.npy"
     unmatching_parent_file = "../utilities/gpx_unmatchingsequencesparent.npy"
@@ -46,13 +47,14 @@ if __name__ == "__main__":
     bad_decoder_json = '../utilities/BADDecoderFromEarlyModel4500_250.json'
     bad_decoder_weights = '../utilities/BadDecoder_ForBadDataGeneration.h5'
 
-    tokenizer_file = '../utilities/TokenizerGAN_GPx_V3.5.pkl'
+    tokenizer_file = '../utilities/TokenizerGANV3.5.pkl'
 
-    proper_formatting_convention = {'start': {'Single Peptide': 651},
-                                    'end': {'Single Peptide': 0}}
+    proper_formatting_convention = {'start': {'Single Peptide': 1},
+                                    'end': {'Single Peptide': 215}}
 
     bad_models = [[bad_encoder_json, bad_encoder_weights],
                   [bad_decoder_json, bad_decoder_weights]]
+
 
     proper_formatting_convention = pd.DataFrame.from_dict(proper_formatting_convention)
 
@@ -80,7 +82,7 @@ if __name__ == "__main__":
     # Clean and process the data
     tokenized_x_train, _, maxlen = process_x_data(X_train, tokenizer, window_size, step_size)
     tokenized_y_train, goal_sequences_full_y = process_y_data(X_train, tokenizer, window_size, step_size, maxlen)
-
+    
     tokenized_x_test, _ = process_x_data(X_test, tokenizer, window_size, step_size, maxlen)
     tokenized_y_test, goal_sequences_full_test_y = process_y_data(X_test, tokenizer, window_size, step_size, maxlen)
 
@@ -89,6 +91,20 @@ if __name__ == "__main__":
 
     full_train = [tokenized_x_train, tokenized_y_train, goal_sequences_full_y, X_train.Diff, X_train]
     full_test = [tokenized_x_test, tokenized_y_test, goal_sequences_full_test_y, X_test.Diff, X_test]
+    trainss = full_train[1]
+    print("FULLTRAIN:: ", trainss)
+    
+    # Save each variable as a separate file
+    # Create the directory if it doesn't exist
+    save_directory = "../data/input_model_1/train_test"
+    os.makedirs(save_directory, exist_ok=True)
+
+    # Save the full_train and full_test lists using pickle in the specified directory
+    with open(os.path.join(save_directory, "full_train.pkl"), "wb") as f:
+        pickle.dump(full_train, f)
+
+    with open(os.path.join(save_directory, "full_test.pkl"), "wb") as f:
+        pickle.dump(full_test, f)
 
     ts = time.time()
     st = datetime.datetime.fromtimestamp(ts).strftime("%Y%m%d %H%M%S")
@@ -102,12 +118,12 @@ if __name__ == "__main__":
         bad_models, hidden_space_dim = hidden_space_dim, reverse_word_map = reverse_word_map, step_size = step_size, window_size = window_size)
 
     # Pretraining the autoencoder
-    autoencoder_file_name = "../data/input_model_1/models/pretrainedInfluenza_biLSTM_autoencoder_model_" + str(
+    autoencoder_file_name = "../data/input_model_1/models/pretraine_GPx_biLSTM_autoencoder_model_" + str(
         hidden_space_dim) + "_" + str(
         num_words) + "_weightsV3.h5"
-    encoder_file_name = "../data/input_model_1/models/pretrainedInfluenza_biLSTM_encoder_model_" + str(hidden_space_dim) + "_" + str(
+    encoder_file_name = "../data/input_model_1/models/pretrained_GPx_biLSTM_encoder_model_" + str(hidden_space_dim) + "_" + str(
         num_words) + "_weightsV3.h5"
-    decoder_file_name = "../data/input_model_1/models/pretrainedInfluenza_biLSTM_decoder_model_" + str(hidden_space_dim) + "_" + str(
+    decoder_file_name = "../data/input_model_1/models/pretrained_GPx__biLSTM_decoder_model_" + str(hidden_space_dim) + "_" + str(
         num_words) + "_weightsV3.h5"
 
     K.clear_session()
@@ -148,10 +164,10 @@ if __name__ == "__main__":
     g_losses = []
     losses = [d_losses, g_losses]
     _, _, _ = train_paired(full_train, full_test, unmatching_files, model_file_names,
-                                                  hidden_space_dim, num_words, embedding_dim, losses, epochs=200, batch_size=1,
+                                                  hidden_space_dim, num_words, embedding_dim, losses, epochs=200, batch_size=45,
                                                   gen_loops=5, first_pass=True, remove_parent_to_parent_training=True, batch_count=20)
     d_losses, g_losses, file_names = train_paired(full_train, full_test, unmatching_files, model_file_names,
-                                                  hidden_space_dim, num_words, embedding_dim, losses, epochs = 150, batch_size = 45,
+                                                  hidden_space_dim, num_words, embedding_dim, losses, epochs = 150, batch_size = 32,
                                                   gen_loops = 5, first_pass = False, remove_parent_to_parent_training = True, batch_count = 20)
 
     # EVALUATION
